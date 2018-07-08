@@ -10,9 +10,18 @@ class Stopwatch extends React.Component {
       running: false,
       resArr: []
     }
+    this.start = this.start.bind(this);
+    this.format = this.format.bind(this);
+    this.reset = this.reset.bind(this);
+    this.step = this.step.bind(this);
+    this.calculate = this.calculate.bind(this);
+    this.stop = this.stop.bind(this);
+    this.clear = this.clear.bind(this);
+    this.lap = this.lap.bind(this);
+    this.cleanLaps = this.cleanLaps.bind(this);
   }
 
-  reset = () => {
+  reset(){
     this.setState({
       times: {
         minutes: 0,
@@ -22,11 +31,11 @@ class Stopwatch extends React.Component {
     })
   }
   
-  format = () => {
+  format(){
     return `${this.pad0(this.state.times.minutes)}:${this.pad0(this.state.times.seconds)}:${this.pad0(Math.floor(this.state.times.miliseconds))}`;
   }
 
-  start = () => {
+  start(){
     if (!this.state.running) {
       this.setState({
         running: true,
@@ -34,18 +43,18 @@ class Stopwatch extends React.Component {
       this.watch = setInterval(() => this.step(), 10)
     }
   }
-
-  step = () => {
+  
+  step(){
     if (!this.state.running) return;
-      this.calculate();
+    this.calculate();
   }
 
-  calculate = () => {
+  calculate(){
     this.setState({
       times: {
         minutes: this.state.times.minutes,
         seconds: this.state.times.seconds,
-        miliseconds: this.state.times.miliseconds
+        miliseconds: this.state.times.miliseconds +1
       }
     })
 
@@ -58,6 +67,7 @@ class Stopwatch extends React.Component {
         }
       })
     }
+
     if (this.state.times.seconds >= 60){
       this.setState({
         times: {
@@ -67,34 +77,35 @@ class Stopwatch extends React.Component {
         }
       })
     }
-    console.log(this.state.times)
   }
 
-  stop = () => {
+  stop(){
     this.setState({
       running: false
     })
     clearInterval(this.watch);
   }
 
-  clear = () => {
+  clear(){
+    this.stop();
     this.reset();
   }
 
-  lap = () => {
+  lap(){
     let newRecord = this.format(this.state.times);
     this.setState({
       resArr: [...this.state.resArr, newRecord]  
     })
+    console.log(newRecord)
   }
 
-  cleanLaps = () => {
+  cleanLaps(){
     this.setState({
       resArr: []
     })
   }
 
-  pad0 = (value) => {
+  pad0(value){
     let result = value.toString();
     if (result.length < 2) {
       result = '0' + result;
@@ -102,8 +113,12 @@ class Stopwatch extends React.Component {
     return result;
   }
 
-  render = () => {
-    const arrItems = this.state.resArr.map(el => <li>el</li>);
+  render(){
+
+    let arrItems = this.state.resArr.map((el, i) => {
+      return <li key={i}>{el}</li>
+    })
+
     return (
       <div className="container">
         <nav className="controls">
@@ -116,9 +131,9 @@ class Stopwatch extends React.Component {
 
         <div className="stopwatch">{this.format()}</div>
 
-        {/* <ol className="results">
-          {this.props.arrItems}
-        </ol> */}
+        <ol className="results">
+          {arrItems}
+        </ol>
       </div>
     )
   }
