@@ -13,7 +13,6 @@ class Stopwatch extends React.Component {
     this.start = this.start.bind(this);
     this.format = this.format.bind(this);
     this.reset = this.reset.bind(this);
-    this.step = this.step.bind(this);
     this.calculate = this.calculate.bind(this);
     this.stop = this.stop.bind(this);
     this.clear = this.clear.bind(this);
@@ -40,40 +39,38 @@ class Stopwatch extends React.Component {
       this.setState({
         running: true,
       })
-      this.watch = setInterval(() => this.step(), 10)
+      this.watch = setInterval(() => this.calculate(), 10)
     }
   }
   
-  step(){
-    if (!this.state.running) return;
-    this.calculate();
-  }
-
   calculate(){
+    if (!this.state.running) return;
+    let {minutes, seconds, miliseconds} = this.state.times;
+
     this.setState({
       times: {
-        minutes: this.state.times.minutes,
-        seconds: this.state.times.seconds,
-        miliseconds: this.state.times.miliseconds +1
+        minutes: minutes,
+        seconds: seconds,
+        miliseconds: miliseconds +1
       }
     })
 
-    if (this.state.times.miliseconds >= 100){
+    if (miliseconds >= 100){
       this.setState({
         times: {
-          minutes: this.state.times.minutes,
-          seconds: this.state.times.seconds + 1,
+          minutes: minutes,
+          seconds: seconds + 1,
           miliseconds: 0
         }
       })
     }
 
-    if (this.state.times.seconds >= 60){
+    if (seconds >= 60){
       this.setState({
         times: {
-          minutes: this.state.times.minutes + 1,
+          minutes: minutes + 1,
           seconds: 0,
-          miliseconds: this.state.times.miliseconds
+          miliseconds: miliseconds
         }
       })
     }
@@ -93,10 +90,10 @@ class Stopwatch extends React.Component {
 
   lap(){
     let newRecord = this.format(this.state.times);
+    
     this.setState({
-      resArr: [...this.state.resArr, newRecord]  
+      resArr: [...this.state.resArr, newRecord]
     })
-    console.log(newRecord)
   }
 
   cleanLaps(){
@@ -124,7 +121,7 @@ class Stopwatch extends React.Component {
         <nav className="controls">
           <a href="#" className="button" onClick={this.start}>Start</a>
           <a href="#" className="button" onClick={this.stop}>Stop</a>
-          <a href="#" className="button" onClick={this.reset}>Reset timer</a>
+          <a href="#" className="button" onClick={this.clear}>Reset timer</a>
           <a href="#" className="button" onClick={this.lap}>lap</a>
           <a href="#" className="button" onClick={this.cleanLaps}>clear laps</a>
         </nav>

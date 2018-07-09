@@ -30,7 +30,6 @@ var Stopwatch = function (_React$Component) {
     _this.start = _this.start.bind(_this);
     _this.format = _this.format.bind(_this);
     _this.reset = _this.reset.bind(_this);
-    _this.step = _this.step.bind(_this);
     _this.calculate = _this.calculate.bind(_this);
     _this.stop = _this.stop.bind(_this);
     _this.clear = _this.clear.bind(_this);
@@ -65,43 +64,44 @@ var Stopwatch = function (_React$Component) {
           running: true
         });
         this.watch = setInterval(function () {
-          return _this2.step();
+          return _this2.calculate();
         }, 10);
       }
     }
   }, {
-    key: "step",
-    value: function step() {
-      if (!this.state.running) return;
-      this.calculate();
-    }
-  }, {
     key: "calculate",
     value: function calculate() {
+      if (!this.state.running) return;
+      var _state$times = this.state.times,
+          minutes = _state$times.minutes,
+          seconds = _state$times.seconds,
+          miliseconds = _state$times.miliseconds;
+
+
       this.setState({
         times: {
-          minutes: this.state.times.minutes,
-          seconds: this.state.times.seconds,
-          miliseconds: this.state.times.miliseconds + 1
+          minutes: minutes,
+          seconds: seconds,
+          miliseconds: miliseconds + 1
         }
       });
 
-      if (this.state.times.miliseconds >= 100) {
+      if (miliseconds >= 100) {
         this.setState({
           times: {
-            minutes: this.state.times.minutes,
-            seconds: this.state.times.seconds + 1,
+            minutes: minutes,
+            seconds: seconds + 1,
             miliseconds: 0
           }
         });
       }
 
-      if (this.state.times.seconds >= 60) {
+      if (seconds >= 60) {
         this.setState({
           times: {
-            minutes: this.state.times.minutes + 1,
+            minutes: minutes + 1,
             seconds: 0,
-            miliseconds: this.state.times.miliseconds
+            miliseconds: miliseconds
           }
         });
       }
@@ -124,10 +124,10 @@ var Stopwatch = function (_React$Component) {
     key: "lap",
     value: function lap() {
       var newRecord = this.format(this.state.times);
+
       this.setState({
         resArr: [].concat(_toConsumableArray(this.state.resArr), [newRecord])
       });
-      console.log(newRecord);
     }
   }, {
     key: "cleanLaps",
@@ -175,7 +175,7 @@ var Stopwatch = function (_React$Component) {
           ),
           React.createElement(
             "a",
-            { href: "#", className: "button", onClick: this.reset },
+            { href: "#", className: "button", onClick: this.clear },
             "Reset timer"
           ),
           React.createElement(
