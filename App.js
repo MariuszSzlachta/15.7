@@ -46,7 +46,7 @@ class Stopwatch extends React.Component {
   calculate(){
     if (!this.state.running) return;
     let {minutes, seconds, miliseconds} = this.state.times;
-    miliseconds =1;
+    miliseconds += 1;
     if (miliseconds >= 100){
       seconds += 1;
       miliseconds = 0;
