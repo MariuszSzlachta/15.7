@@ -75,6 +75,7 @@ class Stopwatch extends React.Component {
   clear(){
     this.stop();
     this.reset();
+    
   }
 
   lap(){
